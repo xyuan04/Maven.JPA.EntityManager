@@ -7,7 +7,8 @@ import java.util.Set;
 @Entity
 public class Artist {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
     @Column(name = "first_name")
     private String firstName;
@@ -43,5 +44,16 @@ public class Artist {
 
     public void setInstrument(String instrument) {
         this.instrument = instrument;
+    }
+
+    @Override
+    public String toString() {
+        return "Artist{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", instrument='" + instrument + '\'' +
+                ", cds=" + cds +
+                '}';
     }
 }

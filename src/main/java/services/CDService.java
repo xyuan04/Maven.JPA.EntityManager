@@ -1,6 +1,6 @@
 package services;
 
-import entities.Artist;
+import entities.CD;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,54 +11,59 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-public class ArtistService {
+public class CDService {
     EntityManagerFactory emf;
     EntityManager em;
 
-    public ArtistService() {
+    public CDService() {
         emf = Persistence.createEntityManagerFactory("persist");
         em = emf.createEntityManager();
     }
 
-    public Artist findById(Long id) {
-        return em.find(Artist.class, id);
+    public CD findById(Long id) {
+        return em.find(CD.class, id);
     }
 
-    public List<Artist> findAll() {
+    public List<CD> findAll() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Artist> cq = cb.createQuery(Artist.class);
-        Root<Artist> rootEntry = cq.from(Artist.class);
-        CriteriaQuery<Artist> all = cq.select(rootEntry);
-        TypedQuery<Artist> allQuery = em.createQuery(all);
+        CriteriaQuery<CD> cq = cb.createQuery(CD.class);
+        Root<CD> rootEntry = cq.from(CD.class);
+        CriteriaQuery<CD> all = cq.select(rootEntry);
+        TypedQuery<CD> allQuery = em.createQuery(all);
         return allQuery.getResultList();
     }
 
-    public boolean update(Long id, Artist artist) {
-        Artist old = em.find(Artist.class, id);
+    public boolean update(Long id, CD cd) {
+        CD og = findById(id);
 
-        old.setFirstName(artist.getFirstName());
-        old.setLastName(artist.getLastName());
-        old.setInstrument(artist.getInstrument());
+        og.setTitle(cd.getTitle());
+        og.setDesc(cd.getDesc());
+        og.setYear(cd.getYear());
+        og.setArtists(cd.getArtists());
+        og.setPrice(cd.getPrice());
 
         em.getTransaction().begin();
-        em.persist(old);
+        em.persist(og);
         em.getTransaction().commit();
 
         return true;
     }
 
-    public boolean create(Artist artist) {
+    public boolean create(CD cd) {
         em.getTransaction().begin();
-        em.persist(artist);
+        em.persist(cd);
         em.getTransaction().commit();
+
         return true;
     }
 
     public boolean delete(Long id) {
-        Artist goner = findById(id);
+        CD goner = findById(id);
+
         em.getTransaction().begin();
         em.remove(goner);
         em.getTransaction().commit();
+
         return true;
     }
 }
